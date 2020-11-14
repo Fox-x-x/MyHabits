@@ -64,13 +64,11 @@ class InfoViewController: UIViewController {
         
         let constraints = [
             
-            // scrollView
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            // contentView
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
@@ -78,11 +76,9 @@ class InfoViewController: UIViewController {
             contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             contentView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
             
-            // title label
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             
-            // textView
             textView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),

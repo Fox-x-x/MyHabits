@@ -9,13 +9,6 @@ import UIKit
 
 class ProgressCollectionViewCell: UICollectionViewCell {
     
-//    var progress: Float? {
-//        didSet {
-//            guard let completed = progress else { return }
-//            setProgress(completed, withAnimation: true)
-//        }
-//    }
-    
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
