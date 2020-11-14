@@ -129,7 +129,23 @@ class HabitViewController: UIViewController {
     
     // нажатие на кнопку "Сохранить"
     @objc private func saveButtonTapped() {
-        // code...
+        
+        // если после с названием привычки заполнено, то всё ок
+        if !descriptionTextField.text!.isEmpty {
+            let newHabit = Habit(name: descriptionTextField.text!, date: datePicker.date, color: colorView.backgroundColor!)
+            let store = HabitsStore.shared
+            store.habits.append(newHabit)
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        } else {
+            // если не заполнено, показываем alert
+            let alert = UIAlertController(title: "Опаньки...", message: "Вы не вписали название привычки", preferredStyle: .alert)
+            let okAlertAction = UIAlertAction(title: "ща впишу:)", style: .default) { (_) in
+                print("нажата кнопка OK в алерте")
+            }
+            alert.addAction(okAlertAction)
+            present(alert, animated: true, completion: nil)
+        }
+        
     }
     
     // нажатие на кнопку "Отмена"
@@ -147,20 +163,13 @@ class HabitViewController: UIViewController {
     
     // обработка изменений в datePicker (забираем из него значение времени)
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm a"
-        
-        let selectedDate: String = dateFormatter.string(from: sender.date)
-        datePickerTimeLabel.text = selectedDate
+        datePickerTimeLabel.text = dateToString(sender.date, withFormat: "hh:mm a")
     }
     
     // возвращает текущее время
     private func getCurrentTime() -> String {
-        let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm a"
-        
         let now = Date()
-        let time: String = dateFormatter.string(from: now)
+        let time: String = dateToString(now, withFormat: "hh:mm a")
         
         return time
     }
@@ -175,63 +184,52 @@ class HabitViewController: UIViewController {
         
         let constraints = [
             
-            // scrollView
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // contentView
+
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             contentView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
-            
-            // nameLabel
+
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            // descriptionTextField
+
             descriptionTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 7),
             descriptionTextField.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             descriptionTextField.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            
-            // colorLabel
+
             colorLabel.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: 15),
             colorLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             colorLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            
-            // colorView
+
             colorView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 7),
             colorView.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             colorView.widthAnchor.constraint(equalToConstant: 30),
             colorView.heightAnchor.constraint(equalTo: colorView.widthAnchor),
-            
-            // timeLabel
+
             timeLabel.topAnchor.constraint(equalTo: colorView.bottomAnchor, constant: 15),
             timeLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             timeLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            
-            // datePickerLabelsContainer
+
             datePickerLabelsContainer.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 7),
             datePickerLabelsContainer.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             datePickerLabelsContainer.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            
-            // datePickerDayLabel
+
             datePickerDayLabel.topAnchor.constraint(equalTo: datePickerLabelsContainer.topAnchor),
             datePickerDayLabel.leadingAnchor.constraint(equalTo: datePickerLabelsContainer.leadingAnchor),
             datePickerDayLabel.centerYAnchor.constraint(equalTo: datePickerLabelsContainer.centerYAnchor),
-            
-            // datePickerTimeLabel
+
             datePickerTimeLabel.topAnchor.constraint(equalTo: datePickerDayLabel.topAnchor),
             datePickerTimeLabel.leadingAnchor.constraint(equalTo: datePickerDayLabel.trailingAnchor),
             datePickerTimeLabel.trailingAnchor.constraint(equalTo: datePickerLabelsContainer.trailingAnchor),
             datePickerTimeLabel.centerYAnchor.constraint(equalTo: datePickerDayLabel.centerYAnchor),
-            
-            // datePicker
+
             datePicker.topAnchor.constraint(equalTo: datePickerLabelsContainer.bottomAnchor),
             datePicker.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             datePicker.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
