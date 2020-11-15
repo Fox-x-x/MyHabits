@@ -41,6 +41,8 @@ class ProgressCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         
         backgroundColor = .white
+        layer.cornerRadius = 8
+        layer.masksToBounds = false
         
         setupLayout()
         setProgress(HabitsStore.shared.todayProgress, withAnimation: false)

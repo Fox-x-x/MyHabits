@@ -9,6 +9,18 @@ import UIKit
 
 class HabitViewController: UIViewController {
     
+    var isInEditMode: Bool?
+    var habit: CustomHabit?
+    
+    init(isInEditMode: Bool, coder aDecoder: NSCoder) {
+        self.isInEditMode = isInEditMode
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // кнопка "сохранить"
     private lazy var saveButton: UIBarButtonItem = {
         let button = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(saveButtonTapped))
@@ -27,14 +39,6 @@ class HabitViewController: UIViewController {
     private let contentView: UIView = {
         let view = UIView()
         return view
-    }()
-    
-    // scrollView для возможности скролла экрана, если контента очень много
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.delegate = self
-        return scrollView
     }()
     
     // label "название"
@@ -116,26 +120,59 @@ class HabitViewController: UIViewController {
         return dp
     }()
     
+    // button "удалить привычку"
+    private lazy var deleteHabitButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Удалить привычку", for: .normal)
+        button.setTitleColor(ColorPalette.eleventhColor, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        button.addTarget(self, action: #selector(deleteHabitButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        title = "Создать"
         navigationItem.rightBarButtonItems = [saveButton]
         navigationItem.leftBarButtonItems = [cancelButton]
         
-        setupLayout()
+        if let mode = isInEditMode {
+            
+            if isInEditMode == true {
+                print("Редактирование")
+                title = "Править"
+                
+                setupLayout(mode)
+                
+                if let habitToEdit = habit {
+                    setupHabitDetails(habitToEdit.habit)
+                }
+            } else {
+                print("Создание")
+                title = "Создать"
+                setupLayout(mode)
+            }
+        }
+        
     }
     
-    // нажатие на кнопку "Сохранить"
+    // MARK: "Сохранить" tapped
     @objc private func saveButtonTapped() {
         
-        // если после с названием привычки заполнено, то всё ок
+        // если поле с названием привычки заполнено, то всё ок
         if !descriptionTextField.text!.isEmpty {
+            
             let newHabit = Habit(name: descriptionTextField.text!, date: datePicker.date, color: colorView.backgroundColor!)
-            let store = HabitsStore.shared
-            store.habits.append(newHabit)
+            if isInEditMode == true {
+                editHabit(newHabit, atIndex: habit!.index)
+            } else {
+                let store = HabitsStore.shared
+                store.habits.append(newHabit)
+            }
+            
             self.navigationController?.dismiss(animated: true, completion: nil)
+            
         } else {
             // если не заполнено, показываем alert
             let alert = UIAlertController(title: "Опаньки...", message: "Вы не вписали название привычки", preferredStyle: .alert)
@@ -146,6 +183,31 @@ class HabitViewController: UIViewController {
             present(alert, animated: true, completion: nil)
         }
         
+    }
+    
+    // MARK: "Удалить" tapped
+    @objc private func deleteHabitButtonTapped() {
+        if let habitToDelete = habit {
+            
+            let alert = UIAlertController(title: "Удалить привычку", message: "Вы хотите удалить привычку '\(habitToDelete.habit.name)'", preferredStyle: .alert)
+            
+            let cancellAlertAction = UIAlertAction(title: "Отмена", style: .cancel) { (_) in
+            }
+            alert.addAction(cancellAlertAction)
+            
+            let okAlertAction = UIAlertAction(title: "Удалить", style: .default) { (_) in
+                HabitsStore.shared.habits.remove(at: habitToDelete.index)
+                
+                // не знаю как сделать так, чтобы после удаления привычки сразу переходить на HabitsViewController без кнопки "назад" в navigationBar
+                self.navigationController?.pushViewController(HabitsViewController(), animated: true)
+            }
+            alert.addAction(okAlertAction)
+            
+            present(alert, animated: true, completion: nil)
+            
+           
+            
+        }
     }
     
     // нажатие на кнопку "Отмена"
@@ -174,27 +236,85 @@ class HabitViewController: UIViewController {
         return time
     }
     
-    // MARK: Layout
-    private func setupLayout() {
+    // MARK: редактирование привычки
+    private func editHabit(_ habit: Habit, atIndex index: Int) {
+        HabitsStore.shared.habits[index].name = habit.name
+        HabitsStore.shared.habits[index].date = habit.date
+        HabitsStore.shared.habits[index].color = habit.color
+    }
+    
+    // MARK: Setup habit details if in edit mode
+    private func setupHabitDetails(_ habit: Habit) {
+        descriptionTextField.text = habit.name
+        descriptionTextField.textColor = habit.color
+        colorView.backgroundColor = habit.color
+        datePickerTimeLabel.text = dateToString(habit.date, withFormat: "hh:mm a")
+        datePicker.date = habit.date
+    }
+    
+    // MARK: Layout for editing mode
+    private func setupLayout(_ isInEditMode: Bool) {
         
-        view.addSubviewWithAutolayout(scrollView)
-        scrollView.addSubviewWithAutolayout(contentView)
+        view.addSubviewWithAutolayout(contentView)
         contentView.addSubviews(nameLabel, descriptionTextField, colorLabel, colorView, timeLabel, datePickerLabelsContainer, datePicker)
         datePickerLabelsContainer.addSubviews(datePickerDayLabel, datePickerTimeLabel)
         
-        let constraints = [
-            
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        let editModeConstraints = [
 
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            contentView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            contentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+
+            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+
+            descriptionTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 7),
+            descriptionTextField.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            descriptionTextField.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+
+            colorLabel.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: 15),
+            colorLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            colorLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+
+            colorView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 7),
+            colorView.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            colorView.widthAnchor.constraint(equalToConstant: 30),
+            colorView.heightAnchor.constraint(equalTo: colorView.widthAnchor),
+
+            timeLabel.topAnchor.constraint(equalTo: colorView.bottomAnchor, constant: 15),
+            timeLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            timeLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+
+            datePickerLabelsContainer.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 7),
+            datePickerLabelsContainer.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            datePickerLabelsContainer.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+
+            datePickerDayLabel.topAnchor.constraint(equalTo: datePickerLabelsContainer.topAnchor),
+            datePickerDayLabel.leadingAnchor.constraint(equalTo: datePickerLabelsContainer.leadingAnchor),
+            datePickerDayLabel.centerYAnchor.constraint(equalTo: datePickerLabelsContainer.centerYAnchor),
+
+            datePickerTimeLabel.topAnchor.constraint(equalTo: datePickerDayLabel.topAnchor),
+            datePickerTimeLabel.leadingAnchor.constraint(equalTo: datePickerDayLabel.trailingAnchor),
+            datePickerTimeLabel.trailingAnchor.constraint(equalTo: datePickerLabelsContainer.trailingAnchor),
+            datePickerTimeLabel.centerYAnchor.constraint(equalTo: datePickerDayLabel.centerYAnchor),
+
+            datePicker.topAnchor.constraint(equalTo: datePickerLabelsContainer.bottomAnchor),
+            datePicker.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            datePicker.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
+            deleteHabitButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            deleteHabitButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            deleteHabitButton.heightAnchor.constraint(equalToConstant: 44),
+        ]
+        
+        let createModeConstraints = [
+            
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -235,7 +355,13 @@ class HabitViewController: UIViewController {
             datePicker.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ]
         
-        NSLayoutConstraint.activate(constraints)
+        if isInEditMode {
+            contentView.addSubviewWithAutolayout(deleteHabitButton)
+            NSLayoutConstraint.activate(editModeConstraints)
+        } else {
+            NSLayoutConstraint.activate(createModeConstraints)
+        }
+        
         
     }
 
@@ -252,5 +378,8 @@ extension HabitViewController: UIScrollViewDelegate {
 extension HabitViewController: UIColorPickerViewControllerDelegate {
     func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
         colorView.backgroundColor = viewController.selectedColor
+        if isInEditMode == true {
+            descriptionTextField.textColor = viewController.selectedColor
+        }
     }
 }

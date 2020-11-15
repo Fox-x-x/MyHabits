@@ -17,4 +17,5 @@ struct ColorPalette {
     static let eighthColor: UIColor = .systemGray2
     static let ninethColor = UIColor(red: 242/255, green: 242/255, blue: 247/255, alpha: 1)
     static let tenthColor: UIColor = .black
+    static let eleventhColor: UIColor = .red
 }

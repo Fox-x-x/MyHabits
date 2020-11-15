@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		930ADC012561C8400058F96E /* CustomHabit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930ADC002561C8400058F96E /* CustomHabit.swift */; };
 		9320989025548C5600E9403D /* HabitsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9320988F25548C5600E9403D /* HabitsStore.swift */; };
 		9320989325549D2400E9403D /* HabitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9320989225549D2400E9403D /* HabitsViewController.swift */; };
 		9320989625549D3500E9403D /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9320989525549D3500E9403D /* InfoViewController.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		930ADC002561C8400058F96E /* CustomHabit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHabit.swift; sourceTree = "<group>"; };
 		9320988F25548C5600E9403D /* HabitsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsStore.swift; sourceTree = "<group>"; };
 		9320989225549D2400E9403D /* HabitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsViewController.swift; sourceTree = "<group>"; };
 		9320989525549D3500E9403D /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 			children = (
 				93CA81112556B67C0022602D /* LoadTextFromFile.swift */,
 				936248F1255C585000936B96 /* CustomTapGestureRecognizer.swift */,
+				930ADC002561C8400058F96E /* CustomHabit.swift */,
 				93F9E59B255892DA00DEF14A /* ColorPalette.swift */,
 				93F9E59725580AF100DEF14A /* NavBarSize.swift */,
 				93CA81172556BCBF0022602D /* AutoLayout.swift */,
@@ -215,6 +218,7 @@
 				936248F2255C585000936B96 /* CustomTapGestureRecognizer.swift in Sources */,
 				93F9E59825580AF100DEF14A /* NavBarSize.swift in Sources */,
 				9320989625549D3500E9403D /* InfoViewController.swift in Sources */,
+				930ADC012561C8400058F96E /* CustomHabit.swift in Sources */,
 				93EDC738255B03A500D9CA95 /* HabitCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

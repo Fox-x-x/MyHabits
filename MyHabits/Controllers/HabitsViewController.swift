@@ -55,7 +55,7 @@ class HabitsViewController: UIViewController {
     }
     
     @objc private func addButtonTapped() {
-        let habitViewController = UINavigationController(rootViewController: HabitViewController())
+        let habitViewController = UINavigationController(rootViewController: HabitViewController(isInEditMode: false, coder: NSCoder()))
         habitViewController.modalPresentationStyle = .fullScreen
         self.navigationController?.present(habitViewController, animated: true, completion: nil)
     }
@@ -148,7 +148,8 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             let habitDetailsViewController = HabitDetailsViewController()
-            let habit = HabitsStore.shared.habits[indexPath.item]
+            
+            let habit = CustomHabit(habit: HabitsStore.shared.habits[indexPath.item], index: indexPath.item)
             habitDetailsViewController.habit = habit
             navigationController?.pushViewController(habitDetailsViewController, animated: true)
         }

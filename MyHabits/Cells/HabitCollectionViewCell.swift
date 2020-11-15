@@ -64,8 +64,10 @@ class HabitCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+           
         backgroundColor = .white
+        layer.cornerRadius = 8
+        layer.masksToBounds = false
         
         setupLayout()
     }

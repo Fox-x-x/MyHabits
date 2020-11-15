@@ -9,12 +9,14 @@ import UIKit
 
 class HabitDetailsViewController: UIViewController {
     
-    var habit: Habit? {
+    var habit: CustomHabit? {
         didSet {
             guard let habit = habit else { return }
-            title = habit.name
+            title = habit.habit.name
         }
     }
+    
+    
     
     private var currentHabit: Habit?
     
@@ -48,6 +50,7 @@ class HabitDetailsViewController: UIViewController {
 
         navigationItem.rightBarButtonItem = editItemButton
         view.backgroundColor = ColorPalette.ninethColor
+        navigationController?.navigationBar.tintColor = ColorPalette.primaryColor
         setupLayout()
         
     }
@@ -60,7 +63,11 @@ class HabitDetailsViewController: UIViewController {
     }
     
     @objc private func editItemButtonTapped() {
-        
+        let habitViewController = HabitViewController(isInEditMode: true, coder: NSCoder())
+        habitViewController.habit = habit
+        let habitNavController = UINavigationController(rootViewController: habitViewController)
+        habitNavController.modalPresentationStyle = .fullScreen
+        self.navigationController?.present(habitNavController, animated: true, completion: nil)
     }
 
 }
@@ -78,7 +85,7 @@ extension HabitDetailsViewController: UITableViewDataSource {
         let date = HabitsStore.shared.dates[indexPath.row]
         cell.textLabel?.text = dateToString(date, withFormat: .medium)
         
-        if HabitsStore.shared.habit(habit!, isTrackedIn: date) {
+        if HabitsStore.shared.habit(habit!.habit, isTrackedIn: date) {
             cell.accessoryType = .checkmark
         }
 
@@ -100,7 +107,7 @@ private extension HabitDetailsViewController {
         view.addSubviews(activityLabel, habitsTableView)
         
         let constraints = [
-            activityLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topbarHeight + 70),
+            activityLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 22),
             activityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             activityLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
