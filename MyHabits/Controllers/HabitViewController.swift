@@ -205,8 +205,6 @@ class HabitViewController: UIViewController {
             
             present(alert, animated: true, completion: nil)
             
-           
-            
         }
     }
     
@@ -361,7 +359,6 @@ class HabitViewController: UIViewController {
         } else {
             NSLayoutConstraint.activate(createModeConstraints)
         }
-        
         
     }
 

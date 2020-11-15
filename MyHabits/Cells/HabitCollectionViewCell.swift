@@ -15,7 +15,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
             nameLabel.text = habit.name
             nameLabel.textColor = habit.color
             timeLabel.text = habit.dateString
-            howOftenLabel.text = "Подряд: " + inSequence(habit)
+            howOftenLabel.text = "Подряд: " + String(habit.trackDates.count)
             
             tickCircle.layer.borderColor = habit.color.cgColor
             
@@ -76,7 +76,6 @@ class HabitCollectionViewCell: UICollectionViewCell {
         super.init(coder: coder)
     }
     
-    
 }
 
 private extension HabitCollectionViewCell {
@@ -103,16 +102,4 @@ private extension HabitCollectionViewCell {
         NSLayoutConstraint.activate(constraints)
     }
     
-    // подсчитывает сколько раз была затрэкана привычка
-    func inSequence(_ habit: Habit) -> String {
-        let dates = HabitsStore.shared.dates
-        var count = 0
-        for date in dates {
-            if HabitsStore.shared.habit(habit, isTrackedIn: date) {
-                count += 1
-            }
-        }
-        
-        return String(count)
-    }
 }

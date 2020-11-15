@@ -16,8 +16,6 @@ class HabitDetailsViewController: UIViewController {
         }
     }
     
-    
-    
     private var currentHabit: Habit?
     
     private lazy var editItemButton: UIBarButtonItem = {
