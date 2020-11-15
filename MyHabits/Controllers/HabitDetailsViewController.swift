@@ -59,7 +59,6 @@ class HabitDetailsViewController: UIViewController {
         
     }
     
-    
     @objc private func editItemButtonTapped() {
         
     }
@@ -76,10 +75,10 @@ extension HabitDetailsViewController: UITableViewDataSource {
         
         let cell = habitsTableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
         
-        let date = HabitsStore.shared.trackDateString(forIndex: indexPath.row)
-        cell.textLabel?.text = date
+        let date = HabitsStore.shared.dates[indexPath.row]
+        cell.textLabel?.text = dateToString(date, withFormat: .medium)
         
-        if HabitsStore.shared.habit(habit!, isTrackedIn: habit!.date) {
+        if HabitsStore.shared.habit(habit!, isTrackedIn: date) {
             cell.accessoryType = .checkmark
         }
 

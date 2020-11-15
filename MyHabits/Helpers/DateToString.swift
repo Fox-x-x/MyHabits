@@ -16,4 +16,12 @@ extension UIViewController {
         
         return dateFormatter.string(from: date)
     }
+    
+    /// конвертирует дату в формате Date в строку  с выбранным dateStyle
+    func dateToString(_ date: Date, withFormat format: DateFormatter.Style) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = format
+        
+        return dateFormatter.string(from: date)
+    }
 }
