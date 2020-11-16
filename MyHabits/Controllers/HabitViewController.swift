@@ -12,6 +12,7 @@ class HabitViewController: UIViewController {
     var isInEditMode: Bool?
     var habit: CustomHabit?
     
+    
     init(isInEditMode: Bool, coder aDecoder: NSCoder) {
         self.isInEditMode = isInEditMode
         super.init(nibName: nil, bundle: nil)
@@ -198,14 +199,15 @@ class HabitViewController: UIViewController {
             let okAlertAction = UIAlertAction(title: "Удалить", style: .default) { (_) in
                 HabitsStore.shared.habits.remove(at: habitToDelete.index)
                 
-                self.navigationController?.pushViewController(HabitsViewController(), animated: false)
-                self.navigationController?.viewControllers.removeFirst()
+                self.navigationController?.dismiss(animated: true, completion: nil)
+                
             }
             alert.addAction(okAlertAction)
             
             present(alert, animated: true, completion: nil)
             
         }
+        
     }
     
     // нажатие на кнопку "Отмена"
