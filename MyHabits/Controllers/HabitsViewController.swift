@@ -143,7 +143,12 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 22, left: .zero, bottom: .zero, right: .zero)
+        if section == 0 {
+            return UIEdgeInsets(top: 22, left: .zero, bottom: .zero, right: .zero)
+        } else {
+            return UIEdgeInsets(top: 18, left: .zero, bottom: 22, right: .zero)
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
