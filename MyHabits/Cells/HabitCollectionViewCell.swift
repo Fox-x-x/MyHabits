@@ -21,6 +21,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
             
             if habit.isAlreadyTakenToday {
                 tickCircle.backgroundColor = habit.color
+                tickCircle.image = UIImage(systemName: "checkmark")
             } else {
                 tickCircle.backgroundColor = .white
             }
@@ -54,12 +55,16 @@ class HabitCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var tickCircle: UIView = {
-        let view = UIView()
-        view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor.red.cgColor
-        view.layer.cornerRadius = 18
-        return view
+    lazy var tickCircle: UIImageView = {
+        let iv = UIImageView()
+        iv.isUserInteractionEnabled = true
+        iv.contentMode = .center
+        iv.clipsToBounds = true
+        iv.layer.masksToBounds = false
+        iv.tintColor = .white
+        iv.layer.borderWidth = 2
+        iv.layer.cornerRadius = 18
+        return iv
     }()
     
     override init(frame: CGRect) {

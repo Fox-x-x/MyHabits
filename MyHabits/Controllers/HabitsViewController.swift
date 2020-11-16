@@ -67,6 +67,7 @@ class HabitsViewController: UIViewController {
         if !habit.isAlreadyTakenToday {
             let cell = collectionView.cellForItem(at: sender.indexPath!) as! HabitCollectionViewCell
             cell.tickCircle.backgroundColor = habit.color
+            cell.tickCircle.image = UIImage(systemName: "checkmark")
             HabitsStore.shared.track(habit)
             
             collectionView.reloadData()
