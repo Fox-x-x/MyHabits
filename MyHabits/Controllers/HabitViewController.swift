@@ -198,8 +198,8 @@ class HabitViewController: UIViewController {
             let okAlertAction = UIAlertAction(title: "Удалить", style: .default) { (_) in
                 HabitsStore.shared.habits.remove(at: habitToDelete.index)
                 
-                // не знаю как сделать так, чтобы после удаления привычки сразу переходить на HabitsViewController без кнопки "назад" в navigationBar
-                self.navigationController?.pushViewController(HabitsViewController(), animated: true)
+                self.navigationController?.pushViewController(HabitsViewController(), animated: false)
+                self.navigationController?.viewControllers.removeFirst()
             }
             alert.addAction(okAlertAction)
             
