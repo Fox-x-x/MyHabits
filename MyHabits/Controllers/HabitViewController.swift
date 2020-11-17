@@ -12,6 +12,8 @@ class HabitViewController: UIViewController {
     var isInEditMode: Bool?
     var habit: CustomHabit?
     
+    var detailViewController: HabitDetailsViewController?
+    
     
     init(isInEditMode: Bool, coder aDecoder: NSCoder) {
         self.isInEditMode = isInEditMode
@@ -199,6 +201,7 @@ class HabitViewController: UIViewController {
             let okAlertAction = UIAlertAction(title: "Удалить", style: .default) { (_) in
                 HabitsStore.shared.habits.remove(at: habitToDelete.index)
                 
+                self.detailViewController?.navigationController?.popViewController(animated: true)
                 self.navigationController?.dismiss(animated: true, completion: nil)
                 
             }

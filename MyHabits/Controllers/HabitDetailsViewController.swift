@@ -63,6 +63,7 @@ class HabitDetailsViewController: UIViewController {
     @objc private func editItemButtonTapped() {
         let habitViewController = HabitViewController(isInEditMode: true, coder: NSCoder())
         habitViewController.habit = habit
+        habitViewController.detailViewController = self
         let habitNavController = UINavigationController(rootViewController: habitViewController)
         habitNavController.modalPresentationStyle = .fullScreen
         self.navigationController?.present(habitNavController, animated: true, completion: nil)
