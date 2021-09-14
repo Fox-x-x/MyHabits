@@ -32,7 +32,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.text = "Выпить стакан воды и сходить посрать по-царски"
+        label.text = ""
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         return label
